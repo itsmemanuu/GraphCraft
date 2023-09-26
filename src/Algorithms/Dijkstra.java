@@ -40,7 +40,11 @@ public class Dijkstra {
             System.out.print(" -> " + i);
         }
 
-        System.out.println("\n" + table.get(nextid)[0]);
+        //System.out.println("\n" + table.get(nextid)[0]);
+        for (int j : table.keySet()){
+            int [] i = table.get(j);
+            System.out.println(graph.idsInv.get(j) + " " + i[0]);
+        }
     }
 
     private int nextTown(int from, int val){
