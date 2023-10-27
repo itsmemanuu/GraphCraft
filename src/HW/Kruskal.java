@@ -1,4 +1,3 @@
-package HW;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,7 +37,7 @@ public class Kruskal {
 
         while(mstSize<graph.size()-1 && heapEdges.size()!= 0){
             Integer[] edge = heapEdges.poll();
-            if (!sets.get(edge[0]).containsAll(sets.get(edge[1]))){
+            if (!sets.get(edge[0]).containsAll(sets.get(edge[1])) && !sets.get(edge[1]).containsAll(sets.get(edge[0]))){
                 mst[mstSize] = edge;
                 mstSize++;
                 sets.get(edge[0]).addAll(sets.get(edge[1]));
