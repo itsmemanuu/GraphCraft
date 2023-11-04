@@ -3,18 +3,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.PriorityQueue;
 import java.util.stream.Stream;
 
 
 public class Kruskal {
-    PriorityQueue<Integer[]> heapEdges;
-
+    
     public void findMST(ArrayList<ArrayList<Integer[]>> graph){
+        PriorityQueue<Integer[]> heapEdges;
         Integer[][] mst = new Integer[graph.size()][3];
         int mstSize = 0;
+        Integer[] sets = new Integer[graph.size()];
 
         heapEdges = new PriorityQueue<>(new Comparator<Integer[]>() {
             @Override
@@ -23,12 +22,8 @@ public class Kruskal {
             }
         });
 
-        ArrayList<Set<Integer>> sets = new ArrayList<Set<Integer>>();
-        
         for (int i = 0; i < graph.size(); i++){
-            Set<Integer> set = new HashSet<>();
-            set.add(i);
-            sets.add(set);
+            sets[i] = i;
             for (int j = 0; j < graph.get(i).size(); j++){
                 Integer[] edge = {i, graph.get(i).get(j)[0], graph.get(i).get(j)[1]};
                 heapEdges.add(edge);
@@ -37,20 +32,29 @@ public class Kruskal {
 
         while(mstSize<graph.size()-1 && heapEdges.size()!= 0){
             Integer[] edge = heapEdges.poll();
-            if (!sets.get(edge[0]).containsAll(sets.get(edge[1])) && !sets.get(edge[1]).containsAll(sets.get(edge[0]))){
+            if ((sets[edge[0]]!=sets[edge[1]])){
                 mst[mstSize] = edge;
                 mstSize++;
-                sets.get(edge[0]).addAll(sets.get(edge[1]));
-                sets.get(edge[1]).addAll(sets.get(edge[0]));                
+                int idSet = sets[edge[1]];
+                for (int i = 0; i < sets.length; i++){
+                    if (sets[i] == idSet){
+                        sets[i] = sets[edge[0]];
+                    }
+                }            
             }
         }
 
-        int total = 0;
-        for (int i = 0; i < mstSize; i++){
-            System.out.println(mst[i][0] + " - " + mst[i][1] + "\t" + mst[i][2]);
-            total += mst[i][2];
+        if (mstSize != graph.size()-1){
+            System.out.println("No se pudo encontrar un MST");
         }
-        System.out.println("MC: " + total + "\n\n");
+        else{
+            int total = 0;
+            for (int i = 0; i < mstSize; i++){
+                System.out.println(mst[i][0] + " - " + mst[i][1] + "\t" + mst[i][2]);
+                total += mst[i][2];
+            }
+            System.out.println("MC: " + total + "\n\n");
+        }
     }
 
 

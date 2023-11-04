@@ -24,28 +24,39 @@ public class Prim {
                 heapEdges.add(new Integer[]{0, i, matrix[0][i]});
             }
         }
-
+        
         included.add(0);
+        Integer[] minEdge = {0, 0, 0};
         while(included.size() < vxSize){
-            Integer[] minEdge = heapEdges.poll();
-            mst.add(minEdge);
-            included.add(minEdge[1]);
-            
-            for (int i = 0; i < vxSize; i++){
-                int[] act = matrix[minEdge[1]];
-                Integer[] edgeX = {minEdge[1], i, act[i]};
-                if (act[i] != Integer.MAX_VALUE && !mst.contains(edgeX) && !included.contains(i)){
-                    heapEdges.add(edgeX);
-                }
+            Boolean flag = false;
+            while(!heapEdges.isEmpty() && !flag){
+                minEdge = heapEdges.poll();
+                flag = !included.contains(minEdge[1]) || !included.contains(minEdge[0]);
             }
+            if (flag){
+                mst.add(minEdge);
+                included.add(minEdge[1]);
+                for (int i = 0; i < vxSize; i++){
+                    int[] act = matrix[minEdge[1]];
+                    Integer[] edgeX = {minEdge[1], i, act[i]};
+                    if (act[i] != Integer.MAX_VALUE && !mst.contains(edgeX)){
+                        heapEdges.add(edgeX);
+                    }
+                }
+            }   
         }
         
-        int total = 0;
-        for (Integer[] edge : mst){
-            System.out.println(edge[0] + " - " + edge[1] + "\t" + edge[2]);
-            total += edge[2];
+        if (mst.size() != vxSize-1){
+            System.out.println("No se pudo encontrar un MST");
         }
-        System.out.println("MC: " + total + "\n\n");
+        else{
+            int total = 0;
+            for (Integer[] edge : mst){
+                System.out.println(edge[0] + " - " + edge[1] + "\t" + edge[2]);
+                total += edge[2];
+            }
+            System.out.println("MC: " + total + "\n\n");
+        }
     }
 
     public static void main(String[] args) throws IOException {
